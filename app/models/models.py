@@ -1,0 +1,36 @@
+from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from app.db.database import Base
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+class Employee(Base):
+    __tablename__ = "employees"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    department = Column(String, nullable=True)
+    salary = Column(Float, nullable=True)
+    join_date = Column(Date, nullable=True)
+
+
+class Admin(Base):
+    __tablename__ = "admin"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)  # Hashed password
+    join_date = Column(Date, nullable=True)
+
+     # Hash password before saving
+    def set_password(self, password: str):
+        self.password_hash = pwd_context.hash(password)
+
+    # Verify password
+    def verify_password(self, password: str) -> bool:
+        return pwd_context.verify(password, self.password_hash)
+
+
