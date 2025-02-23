@@ -22,15 +22,12 @@ def register_admin(admin: AdminCreate, db: Session = Depends(get_db)):
 @router.post("/login")
 async def signin(login_request: LoginRequest, db: Session = Depends(get_db)):
     admin = get_admin_by_email(db, login_request.email)
+    print(admin)
     if admin:
         if admin.verify_password(login_request.password):
-            return {"access_token": create_token({"email": login_request.email}), "token_type": "bearer"}
+            return {"access_token": create_token({"email": login_request.email, "password" : login_request.password}), "token_type": "bearer"}
         else:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="incorrect password")
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                         detail="user not found")  # for debugging only, should be changed to raise unauthorized always
 
-
-@router.post("/admin/me")
-def read_admin_me(current_admin: Admin = Depends(get_current_user)):
-    return current_admin

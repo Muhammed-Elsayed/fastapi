@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Date
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
+from passlib.context import CryptContext  # encrypt library
 from app.db.database import Base
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -24,6 +24,11 @@ class Admin(Base):
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)  # Hashed password
     join_date = Column(Date, nullable=True)
+
+    # <Admin(id=2, username=nan)> 
+    # it will return the representation of the object .
+    def __str__(self):
+        return f"<Admin(id={self.id}, username={self.name})>"
 
      # Hash password before saving
     def set_password(self, password: str):
