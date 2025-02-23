@@ -4,11 +4,10 @@ from app.models.models import Admin
 from app.schemas.auth_schema import AdminCreate, AdminResponse, LoginRequest
 from app.crud.auth_crud import get_admin_by_email, create_admin
 from app.db.database import get_db
-from app.utils import create_token
-from fastapi.security import OAuth2PasswordRequestForm
-
-
+from app.utils import create_token, get_current_user
 router = APIRouter()
+
+
 
 @router.post("/create_admin", response_model=AdminResponse)
 def register_admin(admin: AdminCreate, db: Session = Depends(get_db)):
@@ -30,3 +29,8 @@ async def signin(login_request: LoginRequest, db: Session = Depends(get_db)):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="incorrect password")
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                         detail="user not found")  # for debugging only, should be changed to raise unauthorized always
+
+
+@router.post("/admin/me")
+def read_admin_me(current_admin: Admin = Depends(get_current_user)):
+    return current_admin
