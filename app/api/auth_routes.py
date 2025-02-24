@@ -25,7 +25,19 @@ async def signin(login_request: LoginRequest, db: Session = Depends(get_db)):
     print(admin)
     if admin:
         if admin.verify_password(login_request.password):
-            return {"access_token": create_token({"email": login_request.email, "password" : login_request.password}), "token_type": "bearer"}
+            token = create_token({"email": login_request.email, "password": login_request.password})
+            
+            # Set token as an HTTPOnly cookie (adjust options as needed)
+            response.set_cookie(
+                key="access_token",
+                value=token,
+                httponly=True,
+                secure=True,       # set to True in production with HTTPS
+                samesite="lax"     # adjust samesite as needed (e.g., 'strict')
+            )
+            
+            # Also return the token in the body
+            return {"access_token": token, "token_type": "bearer"}
         else:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="incorrect password")
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

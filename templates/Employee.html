@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management - Microsoft Theme</title>
+    <style>
+        /* Microsoft Theme Colors */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .search-bar {
+            width: 70%;
+            padding: 8px;
+            border: 1px solid #d2d2d2;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .delete-btn {
+            padding: 8px 15px;
+            background-color: #d83b01; /* Microsoft Red */
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #a92a00;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #d2d2d2;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #0078d4; /* Microsoft Blue */
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .checkbox-cell {
+            width: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <input type="text" class="search-bar" id="search" placeholder="Search employees..." onkeyup="filterEmployees()">
+            <button class="delete-btn" onclick="deleteSelected()">Delete Selected</button>
+        </div>
+        
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th class="checkbox-cell"><input type="checkbox" onclick="toggleAll(this)"></th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                    <th>Join Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="row-checkbox"></td>
+                    <td>101</td>
+                    <td>Alice Johnson</td>
+                    <td>alice@example.com</td>
+                    <td>IT</td>
+                    <td>$80,000</td>
+                    <td>2021-06-15</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="row-checkbox"></td>
+                    <td>102</td>
+                    <td>Bob Smith</td>
+                    <td>bob@example.com</td>
+                    <td>HR</td>
+                    <td>$75,000</td>
+                    <td>2020-09-23</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="row-checkbox"></td>
+                    <td>103</td>
+                    <td>Charlie Brown</td>
+                    <td>charlie@example.com</td>
+                    <td>Finance</td>
+                    <td>$90,000</td>
+                    <td>2019-04-11</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to filter employees
+        function filterEmployees() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let table = document.getElementById("employeeTable");
+            let rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { 
+                let cells = rows[i].getElementsByTagName("td");
+                let match = false;
+                
+                for (let j = 1; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(input)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+
+        // Function to delete selected employees
+        function deleteSelected() {
+            let table = document.getElementById("employeeTable");
+            let checkboxes = document.querySelectorAll(".row-checkbox:checked");
+
+            checkboxes.forEach(checkbox => {
+                let row = checkbox.closest("tr");
+                row.parentNode.removeChild(row);
+            });
+        }
+
+        // Function to toggle all checkboxes
+        function toggleAll(source) {
+            let checkboxes = document.querySelectorAll(".row-checkbox");
+            checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+        }
+    </script>
+
+</body>
+</html>
